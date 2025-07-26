@@ -1,6 +1,7 @@
 import { Contact } from '../models/Contact.js';
 
 export const getAllContacts = async (
+  userId,
   page = 1,
   perPage = 10,
   sortBy = 'name',
@@ -16,7 +17,7 @@ export const getAllContacts = async (
     sortOptions[sortBy] = sortDirection;
   }
 
-  const filter = {};
+  const filter = { userId };
   if (type) {
     filter.contactType = type;
   }
@@ -32,8 +33,8 @@ export const getAllContacts = async (
   return { contacts, totalItems };
 };
 
-export const getContactById = async (id) => {
-  const contact = await Contact.findById(id);
+export const getContactById = async (userId, id) => {
+  const contact = await Contact.findOne({ _id: id, userId });
   return contact;
 };
 
@@ -42,15 +43,16 @@ export const createContact = async (contactData) => {
   return newContact;
 };
 
-export const updateContactById = async (id, updateData) => {
-  const updatedContact = await Contact.findByIdAndUpdate(id, updateData, {
-    new: true,
-    runValidators: true,
-  });
+export const updateContactById = async (userId, id, updateData) => {
+  const updatedContact = await Contact.findOneAndUpdate(
+    { _id: id, userId },
+    updateData,
+    { new: true, runValidators: true },
+  );
   return updatedContact;
 };
 
-export const deleteContactById = async (id) => {
-  const deletedContact = await Contact.findByIdAndDelete(id);
+export const deleteContactById = async (userId, id) => {
+  const deletedContact = await Contact.findOneAndDelete({ _id: id, userId });
   return deletedContact;
 };
