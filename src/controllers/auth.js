@@ -1,5 +1,13 @@
 import createHttpError from 'http-errors';
-import { register, login, refresh, logout } from '../services/auth.js';
+import {
+  register,
+  login,
+  refresh,
+  logout,
+  generateResetToken,
+} from '../services/auth.js';
+import { User } from '../models/User.js';
+import { sendResetPasswordEmail } from '../services/emailService.js';
 
 export const registerUser = async (req, res, next) => {
   try {
@@ -95,5 +103,39 @@ export const logoutUser = async (req, res, next) => {
     res.status(204).json();
   } catch (err) {
     next(err);
+  }
+};
+export const sendResetEmail = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      throw createHttpError(400, 'Email is required');
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      throw createHttpError(404, 'User not found!');
+    }
+
+    const token = generateResetToken(email);
+    const resetLink = `${process.env.APP_DOMAIN}/reset-password?token=${token}`;
+
+    await sendResetPasswordEmail(email, resetLink);
+
+    res.status(200).json({
+      status: 200,
+      message: 'Reset password email has been successfully sent.',
+      data: {},
+    });
+  } catch (error) {
+    if (error.message.includes('Failed to send')) {
+      return next(
+        createHttpError(
+          500,
+          'Failed to send the email, please try again later.',
+        ),
+      );
+    }
+    next(error);
   }
 };
