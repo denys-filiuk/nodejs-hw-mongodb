@@ -147,3 +147,10 @@ export const logout = async (refreshToken) => {
 
   await Session.deleteOne({ _id: session._id });
 };
+
+export const generateResetToken = (email) => {
+  if (!email) {
+    throw createHttpError(400, 'Email is required for reset token generation');
+  }
+  return jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '5m' });
+};
