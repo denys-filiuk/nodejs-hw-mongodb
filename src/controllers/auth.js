@@ -12,8 +12,7 @@ export const registerUser = async (req, res, next) => {
     const newUser = await register({ name, email, password });
 
     res.status(201).json({
-      status: 'success',
-      message: 'Successfully registered a user!',
+      status: 201,
       data: newUser,
     });
   } catch (err) {
@@ -42,8 +41,7 @@ export const loginUser = async (req, res, next) => {
     });
 
     res.status(200).json({
-      status: 'success',
-      message: 'Successfully logged in an user!',
+      status: 200,
       data: { accessToken },
     });
   } catch (err) {
@@ -70,8 +68,7 @@ export const refreshSession = async (req, res, next) => {
     });
 
     res.status(200).json({
-      status: 'success',
-      message: 'Successfully refreshed a session!',
+      status: 200,
       data: { accessToken },
     });
   } catch (err) {
@@ -95,7 +92,7 @@ export const logoutUser = async (req, res, next) => {
       sameSite: 'strict',
     });
 
-    res.status(204).send();
+    res.status(204).json();
   } catch (err) {
     next(err);
   }
