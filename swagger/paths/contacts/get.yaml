@@ -1,31 +1,133 @@
 tags:
   - Contacts
-summary: Get all contacts
-operationId: getAllContacts
-description: Retrieve a list of contacts, optionally filtered by query parameters.
-parameters:
-  - in: query
-    name: limit
-    schema:
-      type: integer
-      default: 20
-    description: Maximum number of contacts to return
-  - in: query
-    name: offset
-    schema:
-      type: integer
-      default: 0
-    description: Number of contacts to skip
+summary: Get contacts
+operationId: fetchContacts
+description: Get contacts
 security:
   - bearerAuth: []
+parameters:
+  - in: query
+    name: page
+    description: The page number for pagination (starting from 1).
+    required: false
+    schema:
+      type: integer
+      default: 1
+      example: 7
+
+  - in: query
+    name: perPage
+    description: The number of contacts per page.
+    required: false
+    schema:
+      type: integer
+      default: 10
+      example: 20
+
+  - in: query
+    name: name
+    description: >
+      Sort order for the `name` field.  
+      Possible values: `asc` (ascending) or `desc` (descending).
+    required: false
+    schema:
+      type: string
+      enum: [asc, desc]
+    example: asc
+
+  - in: query
+    name: isFavourite
+    description: >
+      Sort order for the `isFavourite` field.  
+      Possible values: `asc` (ascending) or `desc` (descending).
+    required: false
+    schema:
+      type: string
+      enum: [asc, desc]
+    example: desc
+
+  - in: query
+    name: contactType
+    description: >
+      Filter contacts by `contactType`.  
+      Allowed values: `work`, `home`, or `personal`.
+    required: false
+    schema:
+      type: string
+      enum: [work, home, personal]
+    example: work
+
 responses:
   '200':
-    description: List of contacts
+    description: Successfully found contacts
     content:
       application/json:
         schema:
-          type: array
-          items:
-            $ref: ../../components/schemas/contact.yaml
-  '404':
-    description: No contacts found
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully found contacts!
+            data:
+              type: object
+              required:
+                - data
+                - page
+                - perPage
+                - totalItems
+                - totalPages
+                - hasNextPage
+                - hasPreviousPage
+                - sortBy
+                - sortOrder
+                - filter
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: '../../components/schemas/contact.yaml'
+                page:
+                  type: integer
+                  example: 1
+                perPage:
+                  type: integer
+                  example: 10
+                totalItems:
+                  type: integer
+                  example: 0
+                totalPages:
+                  type: integer
+                  example: 0
+                hasNextPage:
+                  type: boolean
+                  example: true
+                hasPreviousPage:
+                  type: boolean
+                  example: false
+                sortBy:
+                  type: string
+                  enum: [name, isFavourite]
+                  example: name
+                sortOrder:
+                  type: string
+                  enum: [asc, desc]
+                  example: desc
+                filter:
+                  type: object
+                  properties:
+                    contactType:
+                      type: string
+                      enum: [work, home, personal]
+                      example: work
+
+  '401':
+    $ref: ../../components/responses/401.yaml
+  '500':
+    $ref: ../../components/responses/500.yaml
