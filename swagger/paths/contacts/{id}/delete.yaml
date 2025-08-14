@@ -13,6 +13,8 @@ parameters:
       type: string
       example: 6895889e53921ad84070f388
 responses:
+  '204':
+    $ref: ../../../components/responses/204.yaml
   '401':
     $ref: ../../../components/responses/401.yaml
   '404':
