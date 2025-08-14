@@ -1,0 +1,51 @@
+type: object
+required:
+  - _id
+  - name
+  - phoneNumber
+  - contactType
+  - userId
+  - createdAt
+  - updatedAt
+properties:
+  _id:
+    type: string
+    description: Student id
+    example: 68962e8e5ae0a5402d96f9b6
+  name:
+    type: string
+    description: Student name
+    example: John Deere
+  phoneNumber:
+    type: string
+    description: Contact number
+    example: +380123456789
+  email:
+    type: string
+    description: Contact email
+    example: qwe@gmail.com
+  isFavourite:
+    type: boolean
+    description: Contact is favourite
+    example: true
+  contactType:
+    type: string
+    enum: ['work', 'home', 'personal']
+    description: Contact type
+    example: work
+  userId:
+    type: string
+    description: Contact id
+    example: 6895889e53921ad84070f388
+  photo:
+    type: string
+    format: binary
+    description: Contact avatar
+  createdAt:
+    type: string
+    format: date-time
+    example: 2025-08-14T17:27:59.621+00:00
+  updatedAt:
+    type: string
+    format: date-time
+    example: 2025-08-14T17:27:59.621+00:00

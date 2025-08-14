@@ -1,0 +1,18 @@
+description: Created a student
+content:
+  application/json:
+    schema:
+      type: object
+      required:
+        - status
+        - message
+        - data
+      properties:
+        status:
+          type: integer
+          example: 201
+        message:
+          type: string
+          example: Student created successfully
+        data:
+          $ref: '../schemas/contact.yaml'

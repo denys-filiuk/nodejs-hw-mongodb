@@ -14,7 +14,7 @@ import {
   updateContactSchema,
 } from '../schemas/contactsSchemas.js';
 import { authenticate } from '../middlewares/authenticate.js';
-import upload from '../middlewares/upload.middleware.js';
+import { upload } from '../middlewares/upload.js';
 
 const router = express.Router();
 

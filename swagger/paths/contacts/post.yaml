@@ -1,0 +1,52 @@
+tags:
+  - Contacts
+summary: Create contacts
+operationId: createContacts
+description: Create contacts
+security:
+  - bearerAuth: []
+requestBody:
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        required:
+          - name
+          - phoneNumber
+          - contactType
+        properties:
+          name:
+            type: string
+            description: Contact name
+            example: John Deere
+          phoneNumber:
+            type: string
+            description: Contact number
+            example: +380123456789
+          email:
+            type: string
+            description: Contact email
+            example: qwe@gmail.com
+          isFavourite:
+            type: boolean
+            description: Contact is fafourite
+            example: true
+          contactType:
+            type: string
+            enum: ['work', 'home', 'personal']
+            description: Contact type
+            example: work
+          photo:
+            type: string
+            format: binary
+            description: Contact avatar
+
+responses:
+  '201':
+    $ref: ../../components/responses/201.yaml
+  '400':
+    $ref: ../../components/responses/400.yaml
+  '401':
+    $ref: ../../components/responses/401.yaml
+  '500':
+    $ref: ../../components/responses/500.yaml
