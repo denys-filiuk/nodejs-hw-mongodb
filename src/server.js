@@ -5,12 +5,11 @@ import contactsRouter from './routers/contacts.js';
 import authRouter from './routers/auth.js';
 import cookieParser from 'cookie-parser';
 import swaggerUi from 'swagger-ui-express';
-import fs from 'fs';
-import yaml from 'js-yaml';
+import SwaggerParser from '@apidevtools/swagger-parser';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 
-export function setupServer() {
+export async function setupServer() {
   const app = express();
 
   app.use(cors());
@@ -32,10 +31,12 @@ export function setupServer() {
   app.use('/contacts', contactsRouter);
   app.use('/auth', authRouter);
 
-  const swaggerDocument = yaml.load(
-    fs.readFileSync('./docs/openapi.yaml', 'utf8'),
-  );
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  try {
+    const swaggerDocument = await SwaggerParser.bundle('./docs/openapi.yaml');
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  } catch (err) {
+    console.error('Error bundling Swagger files:', err);
+  }
 
   app.use(notFoundHandler);
   app.use(errorHandler);
