@@ -1,0 +1,23 @@
+post:
+  tags:
+    - Contacts
+  summary: Create a new contact
+  operationId: createContact
+  description: Add a new contact to the database.
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/contact.yaml
+  responses:
+    '201':
+      description: Contact created successfully
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/contact.yaml
+    '400':
+      description: Invalid input
